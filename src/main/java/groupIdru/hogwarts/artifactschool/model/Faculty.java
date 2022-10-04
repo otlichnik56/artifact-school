@@ -1,7 +1,7 @@
 package groupIdru.hogwarts.artifactschool.model;
 
 import java.util.Objects;
-
+//
 public class Faculty {
     private long id;
     private String name;
