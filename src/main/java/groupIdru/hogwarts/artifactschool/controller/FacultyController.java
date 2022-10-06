@@ -2,11 +2,10 @@ package groupIdru.hogwarts.artifactschool.controller;
 
 import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.service.FacultyService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Collection;
 
-import java.util.List;
-import java.util.Map;
-//
 @RestController
 @RequestMapping("faculties")
 public class FacultyController {
@@ -18,7 +17,7 @@ public class FacultyController {
     }
 
     @GetMapping
-    public Map<Long, Faculty> getAllFaculties() {
+    public Collection<Faculty> getAllFaculties() {
         return facultyService.getAllFaculties();
     }
 
@@ -38,13 +37,14 @@ public class FacultyController {
     }
 
     @DeleteMapping("{id}")
-    public Faculty deleteFaculty(@PathVariable Long id) {
-        return facultyService.deleteFaculty(id);
+    public ResponseEntity deleteFaculty(@PathVariable Long id) {
+        facultyService.deleteFaculty(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/color/{color}")
-    public List<Faculty> getFacultyColor(@PathVariable String color) {
-        return facultyService.getFacultyColor(color);
+    public Collection<Faculty> findByColor(@PathVariable String color) {
+        return facultyService.findByColor(color);
     }
 
 }

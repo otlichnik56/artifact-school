@@ -1,9 +1,15 @@
 package groupIdru.hogwarts.artifactschool.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
-//
+
+@Entity
 public class Student {
-    private Long id;
+    @Id
+    @GeneratedValue
+    private long id;
     private String name;
     private int age;
 
@@ -31,12 +37,6 @@ public class Student {
         this.age = age;
     }
 
-    public Student(Long id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +58,5 @@ public class Student {
                 ", age=" + age +
                 '}';
     }
-
 
 }
