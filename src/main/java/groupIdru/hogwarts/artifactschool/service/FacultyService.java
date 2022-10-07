@@ -19,7 +19,7 @@ public class FacultyService {
     }
 
     public Faculty getFaculty(long id) {
-        return facultyRepository.findById(id).get();
+        return facultyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
     }
 
     public Faculty createFaculty(Faculty faculty) {
@@ -31,6 +31,7 @@ public class FacultyService {
     }
 
     public void deleteFaculty(long id) {
+        facultyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
         facultyRepository.deleteById(id);
     }
 

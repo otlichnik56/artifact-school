@@ -3,9 +3,11 @@ package groupIdru.hogwarts.artifactschool.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
+@Table(name = "Students")
 public class Student {
     @Id
     @GeneratedValue
