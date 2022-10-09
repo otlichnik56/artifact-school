@@ -6,7 +6,7 @@ import groupIdru.hogwarts.artifactschool.service.FacultyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
-//
+
 @RestController
 @RequestMapping("faculties")
 public class FacultyController {
@@ -53,9 +53,9 @@ public class FacultyController {
         return facultyService.findByColorOrName(param);
     }
 
-    @GetMapping("{name}")
-    public Collection<Student> findStudentsOfFaculty(@RequestParam  String name) {
-        return facultyService.findStudentsOfFaculty(name);
+    @GetMapping("students/{id}")
+    public Collection<Student> findStudentsOfFaculty(@PathVariable long id) {
+        return facultyService.findStudentsOfFaculty(id);
     }
 
 }

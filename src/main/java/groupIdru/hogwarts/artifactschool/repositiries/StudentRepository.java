@@ -5,13 +5,14 @@ import groupIdru.hogwarts.artifactschool.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
-//
+import java.util.Optional;
+
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Collection<Student> findByAge(int age);
 
     Collection<Student> findByAgeBetween(int minAge, int maxAge);
 
-    Collection<Student> findByFacultyContainsIgnoreCase(Faculty faculty);
+    Collection<Student> findByFacultyContainsIgnoreCase(Optional<Faculty> faculty);
 
 }

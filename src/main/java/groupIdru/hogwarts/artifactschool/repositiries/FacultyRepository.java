@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
 import java.util.Optional;
-//
+
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {
 
     Faculty findByNameIgnoreCase(String name);
     Collection<Faculty> findByColor(String color);
 
-    Collection<Faculty> findByColorIgnoreCaseOrNameIgnoreCase(String param);
+    Collection<Faculty> findByColorIgnoreCaseOrNameIgnoreCase(String color, String name);
 
     Faculty findByStudentsContainsIgnoreCase(Optional<Student> student);
 
