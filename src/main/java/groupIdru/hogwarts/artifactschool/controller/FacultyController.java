@@ -1,6 +1,7 @@
 package groupIdru.hogwarts.artifactschool.controller;
 
 import groupIdru.hogwarts.artifactschool.model.Faculty;
+import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.service.FacultyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,9 +43,19 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/color/{color}")
+    @GetMapping("color/{color}")
     public Collection<Faculty> findByColor(@PathVariable String color) {
         return facultyService.findByColor(color);
+    }
+
+    @GetMapping("nameorcolor/{param}")
+    public Collection<Faculty> findByColorOrName(@PathVariable String param) {
+        return facultyService.findByColorOrName(param);
+    }
+
+    @GetMapping("{name}")
+    public Collection<Student> findStudentsOfFaculty(@RequestParam  String name) {
+        return facultyService.findStudentsOfFaculty(name);
     }
 
 }

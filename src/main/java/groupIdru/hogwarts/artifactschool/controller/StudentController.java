@@ -1,5 +1,6 @@
 package groupIdru.hogwarts.artifactschool.controller;
 
+import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.service.StudentService;
 import org.springframework.http.ResponseEntity;
@@ -45,5 +46,16 @@ public class StudentController {
     @GetMapping("/age/{age}")
     public Collection<Student> findByAge(@PathVariable int age) {
         return studentService.findByAge(age);
+    }
+
+    @GetMapping("/age/{minAge}/{maxAge}")
+    public Collection<Student> findByAge(@PathVariable int minAge,
+                                         @PathVariable int maxAge) {
+        return studentService.findByAgeBetween(minAge, maxAge);
+    }
+
+    @GetMapping("/faculty/{id}")
+    public Faculty findFacultyStudent(@PathVariable Long id) {
+        return studentService.findFaculty(id);
     }
 }

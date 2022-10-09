@@ -1,4 +1,4 @@
-package groupIdru.hogwarts.artifactschool.service;
+package groupIdru.hogwarts.artifactschool.Exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
