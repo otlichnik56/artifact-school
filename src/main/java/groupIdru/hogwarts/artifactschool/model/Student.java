@@ -2,7 +2,7 @@ package groupIdru.hogwarts.artifactschool.model;
 
 import javax.persistence.*;
 import java.util.Objects;
-
+//
 @Entity
 @Table(name = "Students")
 public class Student {

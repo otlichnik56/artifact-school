@@ -6,7 +6,7 @@ import groupIdru.hogwarts.artifactschool.service.FacultyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
-
+//
 @RestController
 @RequestMapping("faculties")
 public class FacultyController {
