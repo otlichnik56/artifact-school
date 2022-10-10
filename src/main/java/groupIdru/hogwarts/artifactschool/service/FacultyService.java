@@ -4,21 +4,17 @@ import groupIdru.hogwarts.artifactschool.Exception.EntityNotFoundException;
 import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.repositiries.FacultyRepository;
-import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class FacultyService {
     private final FacultyRepository facultyRepository;
-    private final StudentRepository studentRepository;
 
-    public FacultyService(FacultyRepository facultyRepository, StudentRepository studentRepository) {
+    public FacultyService(FacultyRepository facultyRepository) {
         this.facultyRepository = facultyRepository;
-        this.studentRepository = studentRepository;
     }
 
     public Collection<Faculty> getAllFaculties() {
@@ -43,7 +39,7 @@ public class FacultyService {
     }
 
     public Collection<Faculty> findByColor(String color) {
-        return facultyRepository.findByColor(color);
+        return facultyRepository.findByColorIgnoreCase(color);
     }
 
     public Collection<Faculty> findByColorOrName(String name) {

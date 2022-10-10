@@ -3,22 +3,18 @@ package groupIdru.hogwarts.artifactschool.service;
 import groupIdru.hogwarts.artifactschool.Exception.EntityNotFoundException;
 import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
-import groupIdru.hogwarts.artifactschool.repositiries.FacultyRepository;
 import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final FacultyRepository facultyRepository;
 
-    public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.facultyRepository = facultyRepository;
     }
 
 
