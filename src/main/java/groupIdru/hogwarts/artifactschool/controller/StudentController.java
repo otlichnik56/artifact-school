@@ -1,11 +1,11 @@
 package groupIdru.hogwarts.artifactschool.controller;
 
+import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.service.StudentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("students")
@@ -13,13 +13,12 @@ public class StudentController {
 
     private final StudentService studentService;
 
-
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
     @GetMapping
-    public Map<Long, Student> getAllStudents() {
+    public Collection<Student> getAllStudents() {
         return studentService.getAllStudents();
     }
 
@@ -39,13 +38,25 @@ public class StudentController {
     }
 
     @DeleteMapping("{id}")
-    public Student deleteStudent(@PathVariable Long id) {
-        return studentService.deleteStudent(id);
+    public ResponseEntity deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/age/{age}")
-    public List<Student> getStudentsAge(@PathVariable int age) {
-        return studentService.getStudentsAge(age);
+    public Collection<Student> findByAge(@PathVariable int age) {
+        return studentService.findByAge(age);
+    }
+
+    @GetMapping("/age/{minAge}/{maxAge}")
+    public Collection<Student> findByAge(@PathVariable int minAge,
+                                         @PathVariable int maxAge) {
+        return studentService.findByAgeBetween(minAge, maxAge);
+    }
+
+    @GetMapping("/faculty/{id}")
+    public Faculty findFacultyStudent(@PathVariable Long id) {
+        return studentService.findFaculty(id);
     }
 
 }
