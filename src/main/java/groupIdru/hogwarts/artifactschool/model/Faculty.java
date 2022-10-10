@@ -1,5 +1,7 @@
 package groupIdru.hogwarts.artifactschool.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -14,7 +16,16 @@ public class Faculty {
     private String color;
 
     @OneToMany(mappedBy = "faculty")
+    @JsonManagedReference
     private Collection<Student> students;
+
+    public Collection<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Collection<Student> students) {
+        this.students = students;
+    }
 
     public Long getId() {
         return id;

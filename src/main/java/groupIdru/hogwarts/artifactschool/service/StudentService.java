@@ -52,8 +52,9 @@ public class StudentService {
     }
 
     public Faculty findFaculty(Long id){
-        Optional<Student> student = studentRepository.findById(id);
-        return facultyRepository.findByStudentsContainsIgnoreCase(student);
-    }
+        return studentRepository.findById(id)
+                .map(Student::getFaculty)
+                .orElse(null);
+        }
 
 }

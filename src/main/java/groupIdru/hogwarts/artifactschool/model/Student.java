@@ -1,5 +1,7 @@
 package groupIdru.hogwarts.artifactschool.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -14,8 +16,17 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name = "faculty_id")
+    @JsonBackReference
     private Faculty faculty;
 
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 
     public Long getId() {
         return id;

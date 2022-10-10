@@ -8,6 +8,7 @@ import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -50,8 +51,9 @@ public class FacultyService {
     }
 
     public Collection<Student> findStudentsOfFaculty(long id) {
-        Optional<Faculty> name = facultyRepository.findById(id);
-        return studentRepository.findByFacultyContainsIgnoreCase(name);
-    }
+        return facultyRepository.findById(id)
+                .map(Faculty::getStudents)
+                .orElse(Collections.emptyList());
+     }
 
 }
