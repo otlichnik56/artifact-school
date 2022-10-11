@@ -37,23 +37,23 @@ public class FacultyController {
         return facultyService.editFaculty(faculty);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity deleteFaculty(@PathVariable Long id) {
+    @DeleteMapping("id")
+    public ResponseEntity deleteFaculty(@RequestParam Long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("color/{color}")
-    public Collection<Faculty> findByColor(@PathVariable String color) {
+    @GetMapping("color")
+    public Collection<Faculty> findByColor(@RequestParam String color) {
         return facultyService.findByColor(color);
     }
 
-    @GetMapping("nameorcolor/{param}")
-    public Collection<Faculty> findByColorOrName(@PathVariable String param) {
+    @GetMapping("nameorcolor")
+    public Collection<Faculty> findByColorOrName(@RequestParam String param) {
         return facultyService.findByColorOrName(param);
     }
 
-    @GetMapping("students/{id}")
+    @GetMapping("{id}/students")
     public Collection<Student> findStudentsOfFaculty(@PathVariable long id) {
         return facultyService.findStudentsOfFaculty(id);
     }

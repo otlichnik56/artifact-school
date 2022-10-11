@@ -37,20 +37,20 @@ public class StudentController {
         return studentService.editStudent(student);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity deleteStudent(@PathVariable Long id) {
+    @DeleteMapping("id")
+    public ResponseEntity deleteStudent(@RequestParam Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/age/{age}")
-    public Collection<Student> findByAge(@PathVariable int age) {
+    @GetMapping
+    public Collection<Student> findByAge(@RequestParam int age) {
         return studentService.findByAge(age);
     }
 
-    @GetMapping("/age/{minAge}/{maxAge}")
-    public Collection<Student> findByAge(@PathVariable int minAge,
-                                         @PathVariable int maxAge) {
+    @GetMapping
+    public Collection<Student> findByAge(@RequestParam int minAge,
+                                         @RequestParam int maxAge) {
         return studentService.findByAgeBetween(minAge, maxAge);
     }
 
