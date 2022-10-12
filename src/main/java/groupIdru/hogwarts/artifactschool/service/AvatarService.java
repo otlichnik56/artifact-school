@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -30,15 +31,15 @@ public class AvatarService {
         this.avatarRepository = avatarRepository;
     }
 
-    public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
         Student student = studentService.getStudent(studentId);
-        Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(file.getOriginalFilename()));
+        Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
         try(InputStream is = file.getInputStream();
             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-            BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+            BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
         ) {
             bis.transferTo(bos);
         }

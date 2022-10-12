@@ -1,16 +1,23 @@
 package groupIdru.hogwarts.artifactschool.controller;
 
+import groupIdru.hogwarts.artifactschool.model.Avatar;
 import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.service.AvatarService;
 import groupIdru.hogwarts.artifactschool.service.StudentService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
+
 
 @RestController
 @RequestMapping("students")
@@ -68,7 +75,31 @@ public class StudentController {
     }
 
 
+
     // домашка 3.5
+
+    @GetMapping("{id}/avatar/data")
+    public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long id) {
+        Avatar avatar = avatarService.findAvatar(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
+        headers.setContentLength(avatar.getData().length);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
+    }
+
+    @GetMapping("{id}/avatar")
+    public void downloadAvatar(@PathVariable Long id, HttpServletResponse responce) throws IOException {
+        Avatar avatar = avatarService.findAvatar(id);
+        Path path = Path.of(avatar.getFilePath());
+        try (InputStream is = Files.newInputStream(path);
+             OutputStream os = responce.getOutputStream()){
+            responce.setStatus(200);
+            responce.setContentType(avatar.getMediaType());
+            responce.setContentLength((int) avatar.getFileSize());
+            is.transferTo(os);
+        }
+    }
+
     @PostMapping(value = "{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatarStudent(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
         if (avatar.getSize() > 1024 * 500) {
