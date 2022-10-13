@@ -91,15 +91,15 @@ public class StudentController {
     public void downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Avatar avatar = avatarService.findAvatar(id);
         Path path = Path.of(avatar.getFilePath());
-        try (InputStream is = Files.newInputStream(path);
-             OutputStream os = response.getOutputStream();
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+        try (InputStream inputStream = Files.newInputStream(path);
+             OutputStream outputStream = response.getOutputStream();
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, 1024)
             ){
             response.setStatus(200);
             response.setContentType(avatar.getMediaType());
             response.setContentLength((int) avatar.getFileSize());
-            bis.transferTo(bos);
+            bufferedInputStream.transferTo(bufferedOutputStream);
             }
     }
 

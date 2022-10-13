@@ -41,12 +41,12 @@ public class AvatarService {
         Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
-        try(InputStream is = file.getInputStream();
-            OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-            BufferedInputStream bis = new BufferedInputStream(is, 1024);
-            BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+        try(InputStream inputStream = file.getInputStream();
+            OutputStream outputStream = Files.newOutputStream(filePath, CREATE_NEW);
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, 1024)
         ) {
-            bis.transferTo(bos);
+            bufferedInputStream.transferTo(bufferedOutputStream);
         }
         Avatar avatar = findAvatar(studentId);
         avatar.setFilePath(filePath.toString());
@@ -67,18 +67,18 @@ public class AvatarService {
     }
 
     public byte[] generateImageData(Path filePath) throws IOException{
-        try (InputStream is = Files.newInputStream(filePath);
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        try (InputStream inputStream = Files.newInputStream(filePath);
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
+             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()
             ) {
-                BufferedImage image = ImageIO.read(bis);
+                BufferedImage image = ImageIO.read(bufferedInputStream);
                 int height = image.getHeight() / (image.getWidth() / 100);
                 BufferedImage data = new BufferedImage(100, height, image.getType());
                 Graphics2D graphics = data.createGraphics();
                 graphics.drawImage(image, 0, 0, Color.blue, null);
                 graphics.dispose();
-                ImageIO.write(data, getExtension(filePath.getFileName().toString()), baos);
-                return baos.toByteArray();
+                ImageIO.write(data, getExtension(filePath.getFileName().toString()), byteArrayOutputStream);
+                return byteArrayOutputStream.toByteArray();
             }
     }
 
