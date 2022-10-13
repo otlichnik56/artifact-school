@@ -88,16 +88,19 @@ public class StudentController {
     }
 
     @GetMapping("{id}/avatar")
-    public void downloadAvatar(@PathVariable Long id, HttpServletResponse responce) throws IOException {
+    public void downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Avatar avatar = avatarService.findAvatar(id);
         Path path = Path.of(avatar.getFilePath());
         try (InputStream is = Files.newInputStream(path);
-             OutputStream os = responce.getOutputStream()){
-            responce.setStatus(200);
-            responce.setContentType(avatar.getMediaType());
-            responce.setContentLength((int) avatar.getFileSize());
-            is.transferTo(os);
-        }
+             OutputStream os = response.getOutputStream();
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+            ){
+            response.setStatus(200);
+            response.setContentType(avatar.getMediaType());
+            response.setContentLength((int) avatar.getFileSize());
+            bis.transferTo(bos);
+            }
     }
 
     @PostMapping(value = "{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

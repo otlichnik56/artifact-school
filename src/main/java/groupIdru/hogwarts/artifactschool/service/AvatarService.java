@@ -50,7 +50,7 @@ public class AvatarService {
         avatar.setFilePath(filePath.toString());
         avatar.setFileSize(file.getSize());
         avatar.setMediaType(file.getContentType());
-        avatar.getData();    // дописать метод
+        avatar.setData(generateImageData(filePath));    // дописать метод
         avatar.setStudent(student);
     }
 
