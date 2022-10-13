@@ -36,7 +36,7 @@ public class AvatarService {
 
         public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
         Student student = studentService.getStudent(studentId);
-        Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
+        Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
         try(InputStream is = file.getInputStream();
@@ -50,12 +50,12 @@ public class AvatarService {
         avatar.setFilePath(filePath.toString());
         avatar.setFileSize(file.getSize());
         avatar.setMediaType(file.getContentType());
-        avatar.setData(generateImageData(filePath));    // дописать метод
+        avatar.setData(generateImageData(filePath));
         avatar.setStudent(student);
     }
 
     public Avatar findAvatar(Long studentId) {
-        return avatarRepository.findByStudentId(studentId).orElse();
+        return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
     private String getExtension(String fileName) {
@@ -65,8 +65,8 @@ public class AvatarService {
     public byte[] generateImageData(Path filePath) throws IOException{
         try (InputStream is = Files.newInputStream(filePath);
              BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream())
-            {
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()
+            ) {
                 BufferedImage image = ImageIO.read(bis);
                 int height = image.getHeight() / (image.getWidth() / 100);
                 BufferedImage data = new BufferedImage(100, height, image.getType());

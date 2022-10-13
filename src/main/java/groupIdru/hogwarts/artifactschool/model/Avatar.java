@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Avatar")
 public class Avatar {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -61,7 +62,5 @@ public class Avatar {
         this.student = student;
     }
 
-    public Avatar orElse() {
-        return new Avatar();
-    }
+
 }
