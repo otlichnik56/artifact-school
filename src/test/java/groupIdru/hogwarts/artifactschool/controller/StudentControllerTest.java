@@ -3,6 +3,7 @@ package groupIdru.hogwarts.artifactschool.controller;
 
 import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
+import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +25,9 @@ class StudentControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private StudentRepository studentRepository;
 
     @Test
     void getAllStudents() {
@@ -58,6 +62,13 @@ class StudentControllerTest {
 
     @Test
     void deleteStudent() {
+        Student student = new Student();
+        student.setName("fdgd");
+        student.setAge(12);
+        student.setFaculty(new Faculty());
+        studentRepository.save(student);
+        restTemplate.delete("http://localhost:" + port + "/" + student.getId());
+        assertThat(studentRepository.findById(student.getId())).isEmpty();
 
     }
 

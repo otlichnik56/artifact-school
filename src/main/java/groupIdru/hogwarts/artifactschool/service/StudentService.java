@@ -23,7 +23,7 @@ public class StudentService {
     }
 
     public Student getStudent(long id) {
-        return studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        return studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public Student createStudent(Student student) {
@@ -35,7 +35,7 @@ public class StudentService {
     }
 
     public void deleteStudent(long id) {
-        studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         studentRepository.deleteById(id);
     }
 

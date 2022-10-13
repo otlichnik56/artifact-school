@@ -3,6 +3,7 @@ package groupIdru.hogwarts.artifactschool.service;
 import groupIdru.hogwarts.artifactschool.model.Avatar;
 import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.repositiries.AvatarRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
@@ -60,7 +62,8 @@ public class AvatarService {
     }
 
     private String getExtension(String fileName) {
-        return fileName.substring(fileName.indexOf(".") + 1);
+        return Objects.nonNull(fileName) ? fileName.substring(fileName.indexOf(".") + 1)
+                : StringUtils.EMPTY;
     }
 
     public byte[] generateImageData(Path filePath) throws IOException{
@@ -78,6 +81,5 @@ public class AvatarService {
                 return baos.toByteArray();
             }
     }
-
 
 }
