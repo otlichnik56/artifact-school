@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
+
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -23,7 +23,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @Transactional
 public class AvatarService {
 
-    @Value("${student.avatar.dir.path}")
+    @Value("${students.avatar.dir.path}")
     private String avatarsDir;
 
     private final StudentService studentService;
@@ -52,6 +52,7 @@ public class AvatarService {
         avatar.setMediaType(file.getContentType());
         avatar.setData(generateImageData(filePath));
         avatar.setStudent(student);
+        avatarRepository.save(avatar);
     }
 
     public Avatar findAvatar(Long studentId) {
