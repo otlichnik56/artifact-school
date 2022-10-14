@@ -1,10 +1,10 @@
 package groupIdru.hogwarts.artifactschool.controller;
 
 import groupIdru.hogwarts.artifactschool.model.Faculty;
+import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.repositiries.FacultyRepository;
 import groupIdru.hogwarts.artifactschool.service.FacultyService;
 import net.minidev.json.JSONObject;
-import netscape.javascript.JSObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,20 +12,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.any;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 class FacultyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private FacultyRepository facultyRepository;
 
@@ -35,66 +41,113 @@ class FacultyControllerTest {
     @InjectMocks
     private FacultyController facultyController;
 
+    Long id = 1L;
+    String name = "Faculty";
+    String color = "blue";
+    JSONObject studentObject;
+    Faculty faculty;
+    Collection<Faculty> faculties;
+    Collection<Student> students;
+
 
     @BeforeEach
-    public void setUp() {
-        Long id = (long) 1;
-        String name = "Faculty";
-        String color = "blue";
-
-        JSONObject studentObject = new JSONObject();
+    void setUp() {
         studentObject.put("name", name);
         studentObject.put("color", color);
-
-        Faculty faculty = new Faculty();
         faculty.setId(id);
         faculty.setName(name);
         faculty.setColor(color);
+        faculties.add(faculty);
     }
 
     @Test
-    void getAllFaculties() {
+    void testGetAllFaculties() throws Exception {
+        when(facultyRepository.findAll()).thenReturn((List<Faculty>) faculties);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculties")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpectAll();
     }
 
     @Test
-    void getFaculty() {
-    }
-
-    @Test
-    void createFaculty() {
-        Long id = (long) 1;
-        String name = "Faculty";
-        String color = "blue";
-
-        JSONObject studentObject = new JSONObject();
-        studentObject.put("name", name);
-        studentObject.put("color", color);
-
-        Faculty faculty = new Faculty();
-        faculty.setId(id);
-        faculty.setName(name);
-        faculty.setColor(color);
-        when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
+    void testGetFaculty() throws Exception {
         when(facultyRepository.findById(any(Long.class))).thenReturn(Optional.of(faculty));
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculties/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("id"))
+                .andExpect(jsonPath("$.name").value("name"))
+                .andExpect(jsonPath("$.color").value("color"));
     }
 
     @Test
-    void editFaculty() {
+    void testCreateFaculty() throws Exception {
+        when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/faculties")
+                        .content(studentObject.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("id"))
+                .andExpect(jsonPath("$.name").value("name"))
+                .andExpect(jsonPath("$.color").value("color"));
     }
 
     @Test
-    void deleteFaculty() {
+    void testEditFaculty() throws Exception {
+        when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/faculties")
+                        .content(studentObject.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("id"))
+                .andExpect(jsonPath("$.name").value("name"))
+                .andExpect(jsonPath("$.color").value("color"));
     }
 
     @Test
-    void findByColor() {
+    void deleteFaculty() throws Exception {
+        when(facultyRepository.deleteById(id)).thenReturn(null);
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/faculties", null));
     }
 
     @Test
-    void findByColorOrName() {
+    void testFindByColor() throws Exception {
+        when(facultyRepository.findByColorIgnoreCase(any(String.class))).thenReturn(faculties);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculties?color=" + color)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpectAll();
     }
 
     @Test
-    void findStudentsOfFaculty() {
+    void testFindByColorOrName() throws Exception {
+        when(facultyRepository.findByColorIgnoreCaseOrNameIgnoreCase(any(String.class), any(String.class)))
+                .thenReturn(faculties);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculties?nameorcolor=" + color)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpectAll();
     }
+
+    @Test
+    void testFindStudentsOfFaculty() throws Exception {
+        when(facultyRepository.findById(any(Long.class))
+                .map(Faculty::getStudents)
+                .orElse(Collections.emptyList())).thenReturn(students);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("1/students")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpectAll();
+    }
+
 }
