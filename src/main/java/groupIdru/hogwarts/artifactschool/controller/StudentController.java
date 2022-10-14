@@ -64,8 +64,8 @@ public class StudentController {
     }
 
     @GetMapping("sort")
-    public Collection<Student> findByAge(@RequestParam int minAge,
-                                         @RequestParam int maxAge) {
+    public Collection<Student> findBetweenByAge(@RequestParam int minAge,
+                                                @RequestParam int maxAge) {
         return studentService.findByAgeBetween(minAge, maxAge);
     }
 
@@ -79,7 +79,7 @@ public class StudentController {
     // домашка 3.5
 
     @GetMapping("{id}/avatar/data")
-    public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long id) {
+    public ResponseEntity<byte[]> downloadAvatarData(@PathVariable Long id) {
         Avatar avatar = avatarService.findAvatar(id);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));

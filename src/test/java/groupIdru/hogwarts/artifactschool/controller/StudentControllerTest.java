@@ -5,14 +5,14 @@ import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StudentControllerTest {
@@ -21,24 +21,25 @@ class StudentControllerTest {
     private int port;
 
     @Autowired
-    private StudentController studentController;
-
-    @Autowired
     private TestRestTemplate restTemplate;
 
     @Autowired
     private StudentRepository studentRepository;
 
+    @Mock
+    private MockMultipartFile mockMultipartFile;
+
     @Test
     void getAllStudents() {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port, String.class))
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students", String.class))
                 .isNotNull();
     }
 
     @Test
     void getStudent() {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "1", String.class))
-                .isNotNull();
+        long id = 1;
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students/" + id, String.class))
+                .isEqualTo(studentRepository.findById(id).toString());
     }
 
     @Test
@@ -47,7 +48,8 @@ class StudentControllerTest {
         student.setName("fdgd");
         student.setAge(12);
         student.setFaculty(new Faculty());
-        assertThat(this.restTemplate.postForObject("http://localhost:" + port, student, String.class)).isNotNull();
+        assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/students", student, String.class))
+                .isNotNull();
     }
 
     @Test
@@ -56,7 +58,7 @@ class StudentControllerTest {
         student.setName("fdgd");
         student.setAge(12);
         student.setFaculty(new Faculty());
-        assertThat(this.restTemplate.postForObject("http://localhost:" + port, student, String.class))
+        assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/students", student, String.class))
                 .isNotNull();
     }
 
@@ -67,34 +69,57 @@ class StudentControllerTest {
         student.setAge(12);
         student.setFaculty(new Faculty());
         studentRepository.save(student);
-        restTemplate.delete("http://localhost:" + port + "/" + student.getId());
+        restTemplate.delete("http://localhost:" + port + "/students/" + student.getId());
         assertThat(studentRepository.findById(student.getId())).isEmpty();
-
     }
 
     @Test
     void findByAge() {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port, String.class))
-                .isNotNull();
+        int age = 10;
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port+ "/students" + "?age="
+                                                    + age, String.class))
+                .isEqualTo(studentRepository.findByAge(age).toString());
     }
 
     @Test
-    void testFindByAge() {
+    void testFindBetweenByAge() {
+        int minAge = 10;
+        int maxAge = 12;
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students/sort" + "?minAge="
+                                                    + minAge + "&maxAge=" + maxAge, String.class))
+                .isEqualTo(studentRepository.findByAgeBetween(minAge, maxAge).toString());
     }
 
     @Test
     void findFacultyStudent() {
-    }
-
-    @Test
-    void downloadAvatar() {
+        long id = 1;
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students/"
+                                                    + id + "/faculty", String.class))
+                .isEqualTo(studentRepository.findById(id).map(Student::getFaculty).toString());
     }
 
     @Test
     void testDownloadAvatar() {
+        long id = 1;
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students"
+                                                    + id + "/avatar", String.class))
+                .isNotNull();
+    }
+
+    @Test
+    void testDownloadAvatarData() {
+        long id = 1;
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students"
+                                                    + id + "/avatar/data", String.class))
+                .isNotNull();
     }
 
     @Test
     void uploadAvatarStudent() {
+        long id = 1;
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students"
+                + id + "/avatar?avatar=" + mockMultipartFile, String.class))
+                .isNotNull();
     }
+
 }
