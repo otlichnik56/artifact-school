@@ -88,7 +88,7 @@ public class StudentController {
     }
 
     @GetMapping("{id}/avatar")
-    public void downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException {
+    public void downloadAvatarStudent(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Avatar avatar = avatarService.findAvatar(id);
         Path path = Path.of(avatar.getFilePath());
         try (InputStream inputStream = Files.newInputStream(path);

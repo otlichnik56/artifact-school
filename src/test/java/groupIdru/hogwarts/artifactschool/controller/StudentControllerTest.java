@@ -30,20 +30,20 @@ class StudentControllerTest {
     private MockMultipartFile mockMultipartFile;
 
     @Test
-    void getAllStudents() {
+    void testGetAllStudents() {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students", String.class))
                 .isNotNull();
     }
 
     @Test
-    void getStudent() {
+    void testGetStudent() {
         long id = 1;
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students/" + id, String.class))
                 .isEqualTo(studentRepository.findById(id).toString());
     }
 
     @Test
-    void createStudent() {
+    void testCreateStudent() {
         Student student = new Student();
         student.setName("fdgd");
         student.setAge(12);
@@ -53,7 +53,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void editStudent() {
+    void TestEditStudent() {
         Student student = new Student();
         student.setName("fdgd");
         student.setAge(12);
@@ -63,7 +63,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void deleteStudent() {
+    void testDeleteStudent() {
         Student student = new Student();
         student.setName("fdgd");
         student.setAge(12);
@@ -74,7 +74,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void findByAge() {
+    void testFindByAge() {
         int age = 10;
         assertThat(this.restTemplate.getForObject("http://localhost:" + port+ "/students" + "?age="
                                                     + age, String.class))
@@ -91,7 +91,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void findFacultyStudent() {
+    void testFindFacultyStudent() {
         long id = 1;
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students/"
                                                     + id + "/faculty", String.class))
@@ -99,7 +99,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void testDownloadAvatar() {
+    void testDownloadAvatarStudent() {
         long id = 1;
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students"
                                                     + id + "/avatar", String.class))
@@ -115,7 +115,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void uploadAvatarStudent() {
+    void testUploadAvatarStudent() {
         long id = 1;
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/students"
                 + id + "/avatar?avatar=" + mockMultipartFile, String.class))
