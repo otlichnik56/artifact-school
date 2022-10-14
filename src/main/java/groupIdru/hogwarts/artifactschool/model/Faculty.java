@@ -1,16 +1,30 @@
 package groupIdru.hogwarts.artifactschool.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
+@Entity
+@Table(name = "Faculties")
 public class Faculty {
+    @Id
+    @GeneratedValue
     private long id;
     private String name;
     private String color;
 
-    public Faculty(Long id, String name, String color) {
-        this.id = id;
-        this.name = name;
-        this.color = color;
+    @OneToMany(mappedBy = "faculty")
+    @JsonManagedReference
+    private Collection<Student> students;
+
+    public Collection<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Collection<Student> students) {
+        this.students = students;
     }
 
     public Long getId() {
@@ -58,4 +72,5 @@ public class Faculty {
                 ", color='" + color + '\'' +
                 '}';
     }
+
 }
