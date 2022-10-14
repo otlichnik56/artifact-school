@@ -5,6 +5,7 @@ import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.repositiries.FacultyRepository;
 import groupIdru.hogwarts.artifactschool.service.FacultyService;
 import net.minidev.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -111,10 +111,11 @@ class FacultyControllerTest {
     }
 
     @Test
-    void deleteFaculty() throws Exception {
-        when(facultyRepository.deleteById(id)).thenReturn(null);
+    void testDeleteFaculty() throws Exception {
+        facultyRepository.deleteById(1L);
+        Assertions.assertNull(faculties);
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/faculties", null));
+                .get("/faculties", (Object) null));
     }
 
     @Test
