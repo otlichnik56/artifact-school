@@ -7,6 +7,7 @@ import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -17,7 +18,20 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    // домашка 4.1
+    public Integer getNumberOfAllStudents() {
+        return studentRepository.getNumberOfAllStudents();
+    }
+    public Double getAvgAgeOfAllStudents() {
+        return studentRepository.getAvgAgeOfAllStudents();
+    }
+    public List<Student> getFiveLastStudents() {
+        return studentRepository.getFiveLastStudents();
+    }
 
+
+
+    // домашка 3.4 и 3.5
     public Collection<Student> getAllStudents() {
         return studentRepository.findAll();
     }

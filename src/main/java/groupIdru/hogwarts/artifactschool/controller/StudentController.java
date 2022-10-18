@@ -17,6 +17,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 
 
 @RestController
@@ -30,6 +31,59 @@ public class StudentController {
         this.studentService = studentService;
         this.avatarService = avatarService;
     }
+
+    // домашка 4.1
+    @GetMapping("number_of_student")
+    public Integer getNumberOfAllStudents() {
+        return studentService.getNumberOfAllStudents();
+    }
+    @GetMapping("avg_age_of_all_students")
+    public Double getAvgAgeOfAllStudents() {
+        return studentService.getAvgAgeOfAllStudents();
+    }
+    @GetMapping("five_last_students")
+    public List<Student> getFiveLastStudents() {
+        return studentService.getFiveLastStudents();
+    }
+
+
+
+    // домашка 3.5
+    @GetMapping("{id}/avatar/data")
+    public ResponseEntity<byte[]> downloadAvatarData(@PathVariable Long id) {
+        Avatar avatar = avatarService.findAvatar(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
+        headers.setContentLength(avatar.getData().length);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
+    }
+
+    @GetMapping("{id}/avatar")
+    public void downloadAvatarStudent(@PathVariable Long id, HttpServletResponse response) throws IOException {
+        Avatar avatar = avatarService.findAvatar(id);
+        Path path = Path.of(avatar.getFilePath());
+        try (InputStream inputStream = Files.newInputStream(path);
+             OutputStream outputStream = response.getOutputStream();
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, 1024)
+        ){
+            response.setStatus(200);
+            response.setContentType(avatar.getMediaType());
+            response.setContentLength((int) avatar.getFileSize());
+            bufferedInputStream.transferTo(bufferedOutputStream);
+        }
+    }
+
+    @PostMapping(value = "{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadAvatarStudent(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
+        if (avatar.getSize() > 1024 * 500) {
+            return ResponseEntity.badRequest().body("Файл огромный!");
+        }
+        avatarService.uploadAvatar(id, avatar);
+        return ResponseEntity.ok().build();
+    }
+
+
 
     // домашка 3.4
     @GetMapping
@@ -72,44 +126,6 @@ public class StudentController {
     @GetMapping("{id}/faculty")
     public Faculty findFacultyStudent(@PathVariable Long id) {
         return studentService.findFaculty(id);
-    }
-
-
-
-    // домашка 3.5
-
-    @GetMapping("{id}/avatar/data")
-    public ResponseEntity<byte[]> downloadAvatarData(@PathVariable Long id) {
-        Avatar avatar = avatarService.findAvatar(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
-        headers.setContentLength(avatar.getData().length);
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
-    }
-
-    @GetMapping("{id}/avatar")
-    public void downloadAvatarStudent(@PathVariable Long id, HttpServletResponse response) throws IOException {
-        Avatar avatar = avatarService.findAvatar(id);
-        Path path = Path.of(avatar.getFilePath());
-        try (InputStream inputStream = Files.newInputStream(path);
-             OutputStream outputStream = response.getOutputStream();
-             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
-             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, 1024)
-            ){
-            response.setStatus(200);
-            response.setContentType(avatar.getMediaType());
-            response.setContentLength((int) avatar.getFileSize());
-            bufferedInputStream.transferTo(bufferedOutputStream);
-            }
-    }
-
-    @PostMapping(value = "{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadAvatarStudent(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
-        if (avatar.getSize() > 1024 * 500) {
-            return ResponseEntity.badRequest().body("Файл огромный!");
-        }
-        avatarService.uploadAvatar(id, avatar);
-        return ResponseEntity.ok().build();
     }
 
 }

@@ -19,17 +19,14 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
-
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
-// домашка 3.5
 @Service
 @Transactional
 public class AvatarService {
 
     @Value("${students.avatar.dir.path}")
     private String avatarsDir;
-
     private final StudentService studentService;
     private final AvatarRepository avatarRepository;
 
@@ -38,11 +35,16 @@ public class AvatarService {
         this.avatarRepository = avatarRepository;
     }
 
+
+    //Домашка 4.1
     public Collection<Avatar> getAllAvatar(Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }
 
+
+
+    // домашка 3.5
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
         Student student = studentService.getStudent(studentId);
         Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(file.getOriginalFilename()));
