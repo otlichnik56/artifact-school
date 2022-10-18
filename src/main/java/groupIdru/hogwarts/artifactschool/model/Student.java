@@ -1,11 +1,32 @@
 package groupIdru.hogwarts.artifactschool.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "Students")
 public class Student {
-    private Long id;
+    @Id
+    @GeneratedValue
+    private long id;
     private String name;
     private int age;
+
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    @JsonBackReference
+    private Faculty faculty;
+
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 
     public Long getId() {
         return id;
@@ -31,12 +52,6 @@ public class Student {
         this.age = age;
     }
 
-    public Student(Long id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +73,5 @@ public class Student {
                 ", age=" + age +
                 '}';
     }
-
 
 }

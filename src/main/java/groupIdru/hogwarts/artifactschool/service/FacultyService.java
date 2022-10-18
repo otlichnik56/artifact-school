@@ -1,45 +1,55 @@
 package groupIdru.hogwarts.artifactschool.service;
 
+import groupIdru.hogwarts.artifactschool.Exception.EntityNotFoundException;
 import groupIdru.hogwarts.artifactschool.model.Faculty;
+import groupIdru.hogwarts.artifactschool.model.Student;
+import groupIdru.hogwarts.artifactschool.repositiries.FacultyRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.Collections;
 
 @Service
 public class FacultyService {
+    private final FacultyRepository facultyRepository;
 
-    private final Map<Long, Faculty> faculties = new HashMap<>();
-    private long lastId = 0;
-
-    public Map<Long, Faculty> getAllFaculties() {
-        return faculties;
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
 
-    public Faculty getFaculty(Long id) {
-        return faculties.get(id);
+    public Collection<Faculty> getAllFaculties() {
+        return facultyRepository.findAll();
+    }
+
+    public Faculty getFaculty(long id) {
+        return facultyRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public Faculty createFaculty(Faculty faculty) {
-        faculty.setId(++lastId);
-        faculties.put(lastId, faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty editFaculty(Faculty faculty) {
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
-    public Faculty deleteFaculty(long id) {
-        return faculties.remove(id);
+    public void deleteFaculty(long id) {
+        facultyRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        facultyRepository.deleteById(id);
     }
 
-    public List<Faculty> getFacultyColor(String color) {
-        return faculties.values().stream()
-                .filter(e -> e.getColor().equals(color))
-                .collect(Collectors.toList());
+    public Collection<Faculty> findByColor(String color) {
+        return facultyRepository.findByColorIgnoreCase(color);
     }
+
+    public Collection<Faculty> findByColorOrName(String name) {
+        return facultyRepository.findByColorIgnoreCaseOrNameIgnoreCase(name, name);
+    }
+
+    public Collection<Student> findStudentsOfFaculty(long id) {
+        return facultyRepository.findById(id)
+                .map(Faculty::getStudents)
+                .orElse(Collections.emptyList());
+     }
+
 }
