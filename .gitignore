@@ -33,3 +33,7 @@ build/
 .vscode/
 /mvnw.cmd
 /mvnw
+/txt/
+
+/.mvn/
+/avatars/
