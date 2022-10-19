@@ -1,3 +1,5 @@
+-- задание 2
+
 CREATE TABLE peoples(
     id             INTEGER PRIMARY KEY,
     name           TEXT,
@@ -13,7 +15,7 @@ CREATE TABLE cars(
    price    REAL
 );
 
---
+-- задание 3
 
 SELECT students.name, students.age, faculties.name
     FROM students
