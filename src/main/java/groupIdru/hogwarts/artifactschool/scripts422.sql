@@ -17,8 +17,8 @@ CREATE TABLE cars(
 
 SELECT students.name, students.age, faculties.name
     FROM students
-    INNER JOIN faculties ON students.faculty_id = faculties.id;
+    LEFT JOIN faculties ON students.faculty_id = faculties.id;
 
 SELECT students.name, students.age, avatar.file_path
     FROM avatar
-    LEFT JOIN students ON avatar.student_id = students.id;
+    INNER JOIN students ON avatar.student_id = students.id;
