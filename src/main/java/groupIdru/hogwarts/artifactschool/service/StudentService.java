@@ -1,47 +1,70 @@
 package groupIdru.hogwarts.artifactschool.service;
 
+import groupIdru.hogwarts.artifactschool.Exception.EntityNotFoundException;
+import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
+import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
 
-    private final Map<Long, Student> students = new HashMap<>();
-    private long lastId = 0;
+    private final StudentRepository studentRepository;
 
-
-    public Map<Long, Student> getAllStudents() {
-        return students;
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
-    public Student getStudent(Long id) {
-        return students.get(id);
+    // домашка 4.1
+    public Integer getNumberOfAllStudents() {
+        return studentRepository.getNumberOfAllStudents();
+    }
+    public Double getAvgAgeOfAllStudents() {
+        return studentRepository.getAvgAgeOfAllStudents();
+    }
+    public List<Student> getFiveLastStudents() {
+        return studentRepository.getFiveLastStudents();
+    }
+
+
+
+    // домашка 3.4 и 3.5
+    public Collection<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
+
+    public Student getStudent(long id) {
+        return studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public Student createStudent(Student student) {
-        student.setId(++lastId);
-        students.put(lastId, student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student editStudent(Student student) {
-        students.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
-    public Student deleteStudent(Long id) {
-        return students.remove(id);
+    public void deleteStudent(long id) {
+        studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        studentRepository.deleteById(id);
     }
 
-    public List<Student> getStudentsAge(int age) {
-        return students.values().stream()
-                .filter(e -> e.getAge() == age)
-                .collect(Collectors.toList());
+    public Collection<Student> findByAge(int age){
+        return studentRepository.findByAge(age);
     }
+
+    public Collection<Student> findByAgeBetween(int minAge, int maxAge){
+        return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    public Faculty findFaculty(Long id){
+        return studentRepository.findById(id)
+                .map(Student::getFaculty)
+                .orElse(null);
+        }
 
 }
