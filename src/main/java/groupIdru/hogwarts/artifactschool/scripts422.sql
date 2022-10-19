@@ -13,7 +13,7 @@ CREATE TABLE cars(
    price    REAL
 );
 
-
+--
 
 SELECT students.name, students.age, faculties.name
     FROM students
