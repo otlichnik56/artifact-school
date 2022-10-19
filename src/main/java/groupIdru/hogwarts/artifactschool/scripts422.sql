@@ -1,15 +1,19 @@
-CREATE TABLE students(
+CREATE TABLE peoples(
     id INTEGER PRIMARY KEY,
     name TEXT,
     age INTEGER,
-    faculty_id INTEGER REFERENCES faculties(id)
+    driver_license BOOLEAN,
+    car_id INTEGER REFERENCES cars(id)
 );
 
-CREATE TABLE faculties(
+CREATE TABLE cars(
     id INTEGER PRIMARY KEY,
-    name TEXT,
-    color TEXT
+    brand TEXT,
+    model TEXT,
+    price REAL
 );
+
+
 
 SELECT students.name, students.age, faculties.name
     FROM students
@@ -17,4 +21,4 @@ SELECT students.name, students.age, faculties.name
 
 SELECT students.name, students.age, avatar.file_path
     FROM avatar
-    INNER JOIN students ON avatar.student_id = students.id;
+    LEFT JOIN students ON avatar.student_id = students.id;
