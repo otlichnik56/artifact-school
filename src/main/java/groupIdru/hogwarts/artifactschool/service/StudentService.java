@@ -1,47 +1,89 @@
 package groupIdru.hogwarts.artifactschool.service;
 
+import groupIdru.hogwarts.artifactschool.Exception.EntityNotFoundException;
+import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
+import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
 
-    private final Map<Long, Student> students = new HashMap<>();
-    private long lastId = 0;
+    Logger logger = LoggerFactory.getLogger(StudentService.class);
+    private final StudentRepository studentRepository;
 
-
-    public Map<Long, Student> getAllStudents() {
-        return students;
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
-    public Student getStudent(Long id) {
-        return students.get(id);
+    public Integer getNumberOfAllStudents() {
+        logger.info("Was invoked method for get number of all students");
+        Integer number = studentRepository.getNumberOfAllStudents();
+        logger.debug("Hogwarts has " + number + " students");
+        return number;
+    }
+    public Double getAvgAgeOfAllStudents() {
+        logger.info("Was invoked method for get avg age of all students");
+        Double avgAge = studentRepository.getAvgAgeOfAllStudents();
+        logger.debug("Avg age of all students is  " + avgAge);
+        return avgAge;
+    }
+    public List<Student> getFiveLastStudents() {
+        logger.info("Was invoked method for get five last students");
+        return studentRepository.getFiveLastStudents();
+    }
+
+
+
+
+    public Collection<Student> getAllStudents() {
+        logger.info("Was invoked method for get all students");
+        return studentRepository.findAll();
+    }
+
+    public Student getStudent(long id) {
+        logger.info("Was invoked method for get student");
+        logger.error("There is not student with id = " + id);
+        return studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public Student createStudent(Student student) {
-        student.setId(++lastId);
-        students.put(lastId, student);
-        return student;
+        logger.info("Was invoked method for create student");
+        return studentRepository.save(student);
     }
 
     public Student editStudent(Student student) {
-        students.put(student.getId(), student);
-        return student;
+        logger.info("Was invoked method for edit student");
+        return studentRepository.save(student);
     }
 
-    public Student deleteStudent(Long id) {
-        return students.remove(id);
+    public void deleteStudent(long id) {
+        logger.info("Was invoked method for delete student");
+        logger.error("There is not student with id = " + id);
+        studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        studentRepository.deleteById(id);
     }
 
-    public List<Student> getStudentsAge(int age) {
-        return students.values().stream()
-                .filter(e -> e.getAge() == age)
-                .collect(Collectors.toList());
+    public Collection<Student> findByAge(int age){
+        logger.info("Was invoked method for find de age students");
+        return studentRepository.findByAge(age);
     }
+
+    public Collection<Student> findByAgeBetween(int minAge, int maxAge){
+        logger.info("Was invoked method for find by age between students");
+        return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    public Faculty findFaculty(Long id){
+        logger.info("Was invoked method for find by faculty student");
+        return studentRepository.findById(id)
+                .map(Student::getFaculty)
+                .orElse(null);
+        }
 
 }
