@@ -34,6 +34,21 @@ public class StudentController {
     }
 
 
+    // домашка 4.6
+    @GetMapping("parallel_streams")
+    public void getAllStudentsParallelStreams() {
+        studentService.getAllStudentsParallelStreams();
+    }
+
+    @GetMapping("synchronized_streams")
+    public void getAllStudentsSynchronizedStreams() {
+        studentService.getAllStudentsSynchronizedStreams();
+    }
+
+
+
+
+
     // домашка 4.5
     @GetMapping("/4.5/to_latter")
     public List<String> getStudentsToLatter(@RequestParam String start) {
@@ -43,10 +58,6 @@ public class StudentController {
     public OptionalDouble getAvgAge() {
         return studentService.getAvgAge();
     }
-
-
-
-
 
     // домашка 4.1
     @GetMapping("number_of_student")
@@ -71,7 +82,6 @@ public class StudentController {
         headers.setContentLength(avatar.getData().length);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
     }
-
     @GetMapping("{id}/avatar")
     public void downloadAvatarStudent(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Avatar avatar = avatarService.findAvatar(id);
@@ -87,7 +97,6 @@ public class StudentController {
             bufferedInputStream.transferTo(bufferedOutputStream);
         }
     }
-
     @PostMapping(value = "{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatarStudent(@PathVariable Long id, @RequestParam MultipartFile avatar) throws IOException {
         if (avatar.getSize() > 1024 * 500) {
@@ -102,22 +111,18 @@ public class StudentController {
     public Collection<Student> getAllStudents() {
         return studentService.getAllStudents();
     }
-
     @GetMapping("{id}")
     public Student getStudent(@PathVariable Long id) {
         return studentService.getStudent(id);
     }
-
     @PostMapping
     public Student createStudent(@RequestBody Student student) {
         return studentService.createStudent(student);
     }
-
     @PutMapping
     public Student editStudent(@RequestBody Student student) {
         return studentService.editStudent(student);
     }
-
     @DeleteMapping("id")
     public ResponseEntity deleteStudent(@RequestParam Long id) {
         studentService.deleteStudent(id);
@@ -128,13 +133,11 @@ public class StudentController {
     public Collection<Student> findByAge(@RequestParam int age) {
         return studentService.findByAge(age);
     }
-
     @GetMapping("sort")
     public Collection<Student> findBetweenByAge(@RequestParam int minAge,
                                                 @RequestParam int maxAge) {
         return studentService.findByAgeBetween(minAge, maxAge);
     }
-
     @GetMapping("{id}/faculty")
     public Faculty findFacultyStudent(@PathVariable Long id) {
         return studentService.findFaculty(id);

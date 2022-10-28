@@ -16,11 +16,64 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
 
-    Logger logger = LoggerFactory.getLogger(StudentService.class);
+    private final Logger logger = LoggerFactory.getLogger(StudentService.class);
+    public final Object flag = new Object();
     private final StudentRepository studentRepository;
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
+
+
+    // домашка 4.6
+    public void getAllStudentsParallelStreams() {
+        printStudentOfParallelStreams(studentRepository.findById(1L).get());
+
+        Thread oneThread = new Thread(() -> {
+            printStudentOfParallelStreams(studentRepository.findById(3L).get());
+            printStudentOfParallelStreams(studentRepository.findById(4L).get());
+        });
+        oneThread.start();
+
+        Thread twoThread = new Thread(() -> {
+            printStudentOfParallelStreams(studentRepository.findById(5L).get());
+            printStudentOfParallelStreams(studentRepository.findById(6L).get());
+        });
+        twoThread.start();
+
+        printStudentOfParallelStreams(studentRepository.findById(2L).get());
+        oneThread.interrupt();
+        twoThread.interrupt();
+    }
+    public void printStudentOfParallelStreams(Student student) {
+        System.out.println(student.getId() + " " + student.getName());
+    }
+
+    public void getAllStudentsSynchronizedStreams() {
+        printStudentOfSynchronizedStreams(studentRepository.findById(1L).get());
+        printStudentOfSynchronizedStreams(studentRepository.findById(2L).get());
+
+        Thread oneThread = new Thread(() -> {
+            printStudentOfSynchronizedStreams(studentRepository.findById(3L).get());
+            printStudentOfSynchronizedStreams(studentRepository.findById(4L).get());
+        });
+        oneThread.start();
+
+        Thread twoThread = new Thread(() -> {
+            printStudentOfSynchronizedStreams(studentRepository.findById(5L).get());
+            printStudentOfSynchronizedStreams(studentRepository.findById(6L).get());
+        });
+        twoThread.start();
+        oneThread.interrupt();
+        twoThread.interrupt();
+    }
+    public synchronized void printStudentOfSynchronizedStreams(Student student) {
+        synchronized (flag) {
+            System.out.println(student.getId() + " " + student.getName());
+        }
+    }
+
+
+
 
 
     // домашка 4.5
@@ -40,10 +93,6 @@ public class StudentService {
                 .average();
     }
 
-
-
-
-
     // до текущей домашки
     public Integer getNumberOfAllStudents() {
         logger.info("Was invoked method for get number of all students");
@@ -62,52 +111,42 @@ public class StudentService {
         return studentRepository.getFiveLastStudents();
     }
 
-
-
-
     public Collection<Student> getAllStudents() {
         logger.info("Was invoked method for get all students");
         return studentRepository.findAll();
     }
-
     public Student getStudent(long id) {
         logger.info("Was invoked method for get student");
         logger.error("There is not student with id = " + id);
         return studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
-
     public Student createStudent(Student student) {
         logger.info("Was invoked method for create student");
         return studentRepository.save(student);
     }
-
     public Student editStudent(Student student) {
         logger.info("Was invoked method for edit student");
         return studentRepository.save(student);
     }
-
     public void deleteStudent(long id) {
         logger.info("Was invoked method for delete student");
         logger.error("There is not student with id = " + id);
         studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         studentRepository.deleteById(id);
     }
-
     public Collection<Student> findByAge(int age){
         logger.info("Was invoked method for find de age students");
         return studentRepository.findByAge(age);
     }
-
     public Collection<Student> findByAgeBetween(int minAge, int maxAge){
         logger.info("Was invoked method for find by age between students");
         return studentRepository.findByAgeBetween(minAge, maxAge);
     }
-
     public Faculty findFaculty(Long id){
         logger.info("Was invoked method for find by faculty student");
         return studentRepository.findById(id)
                 .map(Student::getFaculty)
                 .orElse(null);
-        }
+    }
 
 }
