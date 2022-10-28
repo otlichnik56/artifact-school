@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.OptionalDouble;
 
 
 @RestController
@@ -39,7 +40,7 @@ public class StudentController {
         return studentService.getStudentsToLatter(start);
     }
     @GetMapping("/4.5/avg_age")
-    public Double getAvgAge() {
+    public OptionalDouble getAvgAge() {
         return studentService.getAvgAge();
     }
 
