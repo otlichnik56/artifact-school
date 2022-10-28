@@ -21,6 +21,20 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+
+    // домашка 4.5
+    public List<Student> getStudentsToLatter(String start) {
+        return studentRepository.findAll();
+    }
+    public Double getAvgAge() {
+        return 10.5;
+    }
+
+
+
+
+
+    // до текущей домашки
     public Integer getNumberOfAllStudents() {
         logger.info("Was invoked method for get number of all students");
         Integer number = studentRepository.getNumberOfAllStudents();
@@ -37,9 +51,6 @@ public class StudentService {
         logger.info("Was invoked method for get five last students");
         return studentRepository.getFiveLastStudents();
     }
-
-
-
 
     public Collection<Student> getAllStudents() {
         logger.info("Was invoked method for get all students");

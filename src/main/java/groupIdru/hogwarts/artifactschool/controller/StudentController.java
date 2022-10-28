@@ -32,6 +32,21 @@ public class StudentController {
         this.avatarService = avatarService;
     }
 
+
+    // домашка 4.5
+    @GetMapping("/4.5/to_latter")
+    public List<Student> getStudentsToLatter(@RequestParam String start) {
+        return studentService.getStudentsToLatter(start);
+    }
+    @GetMapping("/4.5/avg_age")
+    public Double getAvgAge() {
+        return studentService.getAvgAge();
+    }
+
+
+
+
+
     // домашка 4.1
     @GetMapping("number_of_student")
     public Integer getNumberOfAllStudents() {
@@ -45,8 +60,6 @@ public class StudentController {
     public List<Student> getFiveLastStudents() {
         return studentService.getFiveLastStudents();
     }
-
-
 
     // домашка 3.5
     @GetMapping("{id}/avatar/data")
@@ -82,8 +95,6 @@ public class StudentController {
         avatarService.uploadAvatar(id, avatar);
         return ResponseEntity.ok().build();
     }
-
-
 
     // домашка 3.4
     @GetMapping

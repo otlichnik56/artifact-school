@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 @Service
 public class FacultyService {
@@ -17,6 +19,24 @@ public class FacultyService {
         this.facultyRepository = facultyRepository;
     }
 
+
+    // домашка 4.5
+    public String getLongNameOfFaculty() {
+        return facultyRepository.findAll().stream()
+                                .max(Comparator.comparing(faculty -> faculty.getName().length()))
+                                .toString();
+    }
+    public Integer getIntegerValue() {
+        return Stream.iterate(1, a -> a +1)
+                        .limit(1_000_000)
+                        .reduce(0, Integer::sum);
+    }
+
+
+
+
+
+    // до текущей домашки
     public Collection<Faculty> getAllFaculties() {
         return facultyRepository.findAll();
     }

@@ -17,6 +17,22 @@ public class FacultyController {
         this.facultyService = facultyService;
     }
 
+
+    // домашка 4.5
+    @GetMapping("/4.5/long_name_of_faculty")
+    public String getLongNameOfFaculty() {
+        return facultyService.getLongNameOfFaculty();
+    }
+    @GetMapping("/4.5/integer_value")
+    public Integer getIntegerValue() {
+        return facultyService.getIntegerValue();
+    }
+
+
+
+
+
+    // до текущей домашки
     @GetMapping
     public Collection<Faculty> getAllFaculties() {
         return facultyService.getAllFaculties();
