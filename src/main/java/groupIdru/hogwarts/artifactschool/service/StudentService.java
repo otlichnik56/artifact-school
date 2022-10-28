@@ -7,35 +7,37 @@ import groupIdru.hogwarts.artifactschool.repositiries.StudentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
+
 
 @Service
 public class StudentService {
 
     Logger logger = LoggerFactory.getLogger(StudentService.class);
     private final StudentRepository studentRepository;
-
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
 
     // домашка 4.5
-    public List<Student> getStudentsToLatter(String start) {
+    public List<String> getStudentsToLatter(String start) {
+        logger.info("Was invoked method for get students to the latter " + start);
         return studentRepository.findAll().stream()
-                                .filter(student -> student.getName().startsWith(start))
-                                .sorted()
-                                .collect(Collectors.toList());
+                .map(student -> student.getName().toUpperCase())
+                .sorted()
+                .filter(s -> s.startsWith(start.toUpperCase()))
+                .collect(Collectors.toList());
     }
     public OptionalDouble getAvgAge() {
+        logger.info("Was invoked method for get avg age of all students");
         return (studentRepository.findAll().stream()
-                                .map(Student::getAge))
-                                .mapToInt(e -> e)
-                                .average();
+                .map(Student::getAge))
+                .mapToInt(e -> e)
+                .average();
     }
 
 
@@ -59,6 +61,9 @@ public class StudentService {
         logger.info("Was invoked method for get five last students");
         return studentRepository.getFiveLastStudents();
     }
+
+
+
 
     public Collection<Student> getAllStudents() {
         logger.info("Was invoked method for get all students");

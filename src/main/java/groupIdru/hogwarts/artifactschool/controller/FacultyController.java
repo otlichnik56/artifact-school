@@ -6,13 +6,13 @@ import groupIdru.hogwarts.artifactschool.service.FacultyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("faculties")
 public class FacultyController {
 
     private final FacultyService facultyService;
-
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
@@ -20,7 +20,7 @@ public class FacultyController {
 
     // домашка 4.5
     @GetMapping("/4.5/long_name_of_faculty")
-    public String getLongNameOfFaculty() {
+    public Optional<String> getLongNameOfFaculty() {
         return facultyService.getLongNameOfFaculty();
     }
     @GetMapping("/4.5/integer_value")

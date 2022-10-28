@@ -4,15 +4,20 @@ import groupIdru.hogwarts.artifactschool.Exception.EntityNotFoundException;
 import groupIdru.hogwarts.artifactschool.model.Faculty;
 import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.repositiries.FacultyRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
 public class FacultyService {
+
+    private final Logger logger = LoggerFactory.getLogger(FacultyService.class);
     private final FacultyRepository facultyRepository;
 
     public FacultyService(FacultyRepository facultyRepository) {
@@ -21,12 +26,14 @@ public class FacultyService {
 
 
     // домашка 4.5
-    public String getLongNameOfFaculty() {
+    public Optional<String> getLongNameOfFaculty() {
+        logger.info("Was invoked method for get long name of faculty");
         return facultyRepository.findAll().stream()
-                                .max(Comparator.comparing(faculty -> faculty.getName().length()))
-                                .toString();
+                                .map(Faculty::getName)
+                                .max(Comparator.comparing(String::length));
     }
     public Integer getIntegerValue() {
+        logger.info("Was invoked method for get integer value");
         return Stream.iterate(1, a -> a +1)
                         .limit(1_000_000)
                         .reduce(0, Integer::sum);

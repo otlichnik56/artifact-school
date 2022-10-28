@@ -4,6 +4,8 @@ import groupIdru.hogwarts.artifactschool.model.Avatar;
 import groupIdru.hogwarts.artifactschool.model.Student;
 import groupIdru.hogwarts.artifactschool.repositiries.AvatarRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @Transactional
 public class AvatarService {
 
+    private final Logger logger = LoggerFactory.getLogger(AvatarService.class);
     @Value("${students.avatar.dir.path}")
     private String avatarsDir;
     private final StudentService studentService;
@@ -38,6 +41,7 @@ public class AvatarService {
 
     //Домашка 4.1
     public Collection<Avatar> getAllAvatar(Integer pageNumber, Integer pageSize) {
+        logger.info("Was invoked method for get  all avatars");
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }

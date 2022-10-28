@@ -36,7 +36,7 @@ public class StudentController {
 
     // домашка 4.5
     @GetMapping("/4.5/to_latter")
-    public List<Student> getStudentsToLatter(@RequestParam String start) {
+    public List<String> getStudentsToLatter(@RequestParam String start) {
         return studentService.getStudentsToLatter(start);
     }
     @GetMapping("/4.5/avg_age")
