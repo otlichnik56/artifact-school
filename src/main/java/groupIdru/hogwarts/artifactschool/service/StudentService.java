@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final Logger logger = LoggerFactory.getLogger(StudentService.class);
-    public final Object flag = new Object();
+    private final Object flag = new Object();
     private final StudentRepository studentRepository;
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -53,23 +53,24 @@ public class StudentService {
         printStudentOfSynchronizedStreams(studentRepository.findById(2L).get());
 
         Thread oneThread = new Thread(() -> {
-            printStudentOfSynchronizedStreams(studentRepository.findById(3L).get());
-            printStudentOfSynchronizedStreams(studentRepository.findById(4L).get());
+            synchronized (flag) {
+                printStudentOfSynchronizedStreams(studentRepository.findById(3L).get());
+                printStudentOfSynchronizedStreams(studentRepository.findById(4L).get());
+            }
         });
         oneThread.start();
 
         Thread twoThread = new Thread(() -> {
-            printStudentOfSynchronizedStreams(studentRepository.findById(5L).get());
-            printStudentOfSynchronizedStreams(studentRepository.findById(6L).get());
+            synchronized (flag) {
+                printStudentOfSynchronizedStreams(studentRepository.findById(5L).get());
+                printStudentOfSynchronizedStreams(studentRepository.findById(6L).get());
+            }
         });
         twoThread.start();
-        oneThread.interrupt();
-        twoThread.interrupt();
+
     }
-    public synchronized void printStudentOfSynchronizedStreams(Student student) {
-        synchronized (flag) {
-            System.out.println(student.getId() + " " + student.getName());
-        }
+    public void printStudentOfSynchronizedStreams(Student student) {
+        System.out.println(student.getId() + " " + student.getName());
     }
 
 
