@@ -82,15 +82,14 @@ public class StudentService {
         logger.info("Was invoked method for get students to the latter " + start);
         return studentRepository.findAll().stream()
                 .map(student -> student.getName().toUpperCase())
+                .filter(studentName -> studentName.startsWith(start.toUpperCase()))
                 .sorted()
-                .filter(s -> s.startsWith(start.toUpperCase()))
                 .collect(Collectors.toList());
     }
     public OptionalDouble getAvgAge() {
         logger.info("Was invoked method for get avg age of all students");
-        return (studentRepository.findAll().stream()
-                .map(Student::getAge))
-                .mapToInt(e -> e)
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
                 .average();
     }
 
